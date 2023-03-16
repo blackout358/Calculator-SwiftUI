@@ -1,9 +1,3 @@
-//
-//  ContentView.swift
-//  Calculator SwiftUI
-//
-//  Created by Bence Gеllért on 09/03/2023.
-//
 
 import SwiftUI
 
