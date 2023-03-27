@@ -399,13 +399,14 @@ struct MenuContent: View {
                             result = item.result
                         }, label: {
                             Text("\(item.inputLine) = \(item.result)")
-                                .frame(maxWidth: .infinity, maxHeight: 100)
+                                .frame(maxWidth: 250, maxHeight: 100)
                                 .font(.system(size:40))
-                                .foregroundColor(Color.red)
+                                .foregroundColor(Color.white)
+                                .background(Color.indigo)
 //                                .background(Color.black)
-                                .cornerRadius(50)
+                                .cornerRadius(15)
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 50)
+                                    RoundedRectangle(cornerRadius: 15)
                                         .stroke(Color.black, lineWidth: 1))
                         })
 //                        Spacer()
