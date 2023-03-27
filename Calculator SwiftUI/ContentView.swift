@@ -14,7 +14,7 @@ struct ContentView: View {
     @State var lineOne = ""
     @State var lineTwo = ""
     @State var operation = ""
-    @State var linePos = 0
+    @State var bringLine = false
     @State var result = ""
     @State var menuOpened: Bool = false
     @State var inputLine = ""
@@ -35,10 +35,9 @@ struct ContentView: View {
                 let lineHeight = CGFloat(70)
                 let lineTextColour = Color.white
                 let lineFontSize:CGFloat = 50
-                let lineBackground = Color.white
+                let lineBackground = Color.gray
                 let lineCornerRadius:CGFloat = 7
                 let inputLineHeight:CGFloat = 230
-                let lineBackgroundColor = Color.gray
                 
                     
                 Spacer()
@@ -69,30 +68,23 @@ struct ContentView: View {
                             .frame(width: lineWidth, height: inputLineHeight, alignment: .leading)
                             .font(.system(size: lineFontSize))
                             .foregroundColor(lineTextColour)
-                            .background(lineBackgroundColor)
+                            .background(lineBackground)
                             .cornerRadius(lineCornerRadius)
                             .overlay(
                                 RoundedRectangle(cornerRadius: lineCornerRadius)
                                     .stroke(Color.black, lineWidth: 1))
                     })
-//                    TextField(
-//                        "Input",
-//                        text: $inputLine
-//                            .padding()
-//                            .frame(width: UIScreen.main.bounds.width, height: inputLineHeight, alignment: .leading)
-//                            .font(.system(size: lineFontSize))
-//                            .foregroundColor(lineTextColour)
-//                            .background(lineBackground)
-//                    )
                     Button(action: {
-                        
+                        if result != "" {
+                            inputLine = result
+                        }
                     }, label: {
                         Text("\(result)")
                             .padding()
                             .frame(width: lineWidth, height: lineHeight, alignment: .leading)
                             .font(.system(size: lineFontSize))
                             .foregroundColor(lineTextColour)
-                            .background(lineBackgroundColor)
+                            .background(lineBackground)
                             .cornerRadius(lineCornerRadius)
                             .overlay(
                                 RoundedRectangle(cornerRadius: lineCornerRadius)
@@ -267,9 +259,11 @@ struct ContentView: View {
                 HStack(spacing: buttonSpacing) {
                     Button(action: {
                         result = calculate()
+                        bringLine = true
+                        
                     }, label: {
                         Text("=")
-                            .frame(width: (buttonSize*3 + buttonSpacing*2), height: buttonSize, alignment: .center)
+                            .frame(width: (buttonSize*2 + buttonSpacing), height: buttonSize, alignment: .center)
                             .font(.system(size:buttonFontSize))
                             .foregroundColor(numTextColour)
                             .background(numBackground)
@@ -280,9 +274,21 @@ struct ContentView: View {
                     })
                     
                     Button(action: {
-                        
+                        inputLine = String(inputLine.dropLast())
+                    }, label: {
+                        Text("␡")
+                            .frame(width: buttonSize, height: buttonSize)
+                            .font(.system(size:buttonFontSize))
+                            .foregroundColor(numTextColour)
+                            .background(numBackground)
+                            .cornerRadius(cornerRadius)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: cornerRadius)
+                                    .stroke(Color.black, lineWidth: 1))
+                    })
+                    
+                    Button(action: {
                         inputLine = ""
-                        
                     }, label: {
                         Text("C")
                             .frame(width: buttonSize, height: buttonSize)
@@ -295,7 +301,6 @@ struct ContentView: View {
                                     .stroke(Color.black, lineWidth: 1))
                     })
                 }
-//                Spacer()
             }
             
             SideMenu(width: UIScreen.main.bounds.width/1.6,
@@ -307,23 +312,15 @@ struct ContentView: View {
     }
 
     func calculate() -> String {
-        
-//        let expn = NSExpression(format:inputLine)
-//        let calc:String = "\(expn.expressionValue(with: nil, context: nil) ?? 0)"
-//        print(calc)
-//        addItem(intputLine: inputLine, res: calc)
-//        return calc
-        if NSPredicate(format: "SELF MATCHES %@", "^[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?([+\\-*/][-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?)*$").evaluate(with: inputLine)
-        {
-            let expn = NSExpression(format:inputLine) 
+        if inputLine.contains("++") || inputLine.contains("--") || inputLine.contains("**") || inputLine.contains("//") {
+            return "Error"
+        }
+        else {
+            let expn = NSExpression(format:inputLine)
             let calc:String = "\(expn.expressionValue(with: nil, context: nil) ?? 0)"
             print(calc)
             addItem(intputLine: inputLine, res: calc)
             return calc
-        }
-        else {
-            print("u fucked up")
-            return "Error"
         }
     }
 
@@ -335,10 +332,13 @@ struct ContentView: View {
             result = ""
             inputLine = ""
         }
-        if linePos == 0 // if top line type on top line
-        {
-            inputLine += ("\(input)")
-        }
+//        if bringLine == true {
+//            if input == "/" || input == "+" || input == "*" || input == "-" {
+//                inputLine = "\(result) + \(input)"
+//                bringLine = false
+//            }
+//        }
+        inputLine += ("\(input)")
     }
     
     func toggleMenu() {
@@ -362,7 +362,7 @@ struct SideMenu: View {
             GeometryReader { _ in
                 // EmptyView()
             }
-            .background(Color.red.opacity(0.25))
+            .background(Color.black.opacity(0.25))
             .opacity(self.menuOpened ? 1 : 0)
             .animation(Animation.easeIn.delay(0.25), value: menuOpened)
             .onTapGesture {

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@main
+	@main
 struct Calculator_SwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
