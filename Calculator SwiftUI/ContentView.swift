@@ -24,20 +24,21 @@ struct ContentView: View {
     var body: some View {
         
         ZStack {
-            Color.mint
+            Color.black
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 
                 
                 // Text Line Constants
                 
-                let lineWidth = UIScreen.main.bounds.width
+                let lineWidth = UIScreen.main.bounds.width-10
                 let lineHeight = CGFloat(70)
-                let lineTextColour = Color.pink
+                let lineTextColour = Color.white
                 let lineFontSize:CGFloat = 50
                 let lineBackground = Color.white
-                
+                let lineCornerRadius:CGFloat = 7
                 let inputLineHeight:CGFloat = 230
+                let lineBackgroundColor = Color.gray
                 
                     
                 Spacer()
@@ -58,40 +59,21 @@ struct ContentView: View {
 //                    .padding(.vertical, 30)
 
                 Spacer()
-                
-                // place textLine in dictionary
-                
-//                let lines: [Int: String] =
-//                [
-//                    0: lineOne,
-//                    1: operation,
-//                    2: lineTwo,
-//                    3: result
-//                ]
-                
-                // Print out each value in dictionary with iteration
-//                ForEach(lines.keys.sorted(by: <), id: \.self) { key in
-//                    Button(action: {
-//                        linePos = key
-//                    }, label: {
-//                        Text("\(lines[key]!)")
-//                            .padding()
-//                            .frame(width: lineWidth, height: lineHeight, alignment: .leading)
-//                            .font(.system(size: lineFontSize))
-//                            .foregroundColor(lineTextColour)
-//                            .background(lineBackground)
-//                    })
-//                }
+        
                 Group {
                     Button(action: {
 
                     }, label: {
                         Text("\(inputLine)")
                             .padding()
-                            .frame(width: UIScreen.main.bounds.width, height: inputLineHeight, alignment: .leading)
+                            .frame(width: lineWidth, height: inputLineHeight, alignment: .leading)
                             .font(.system(size: lineFontSize))
                             .foregroundColor(lineTextColour)
-                            .background(lineBackground)
+                            .background(lineBackgroundColor)
+                            .cornerRadius(lineCornerRadius)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: lineCornerRadius)
+                                    .stroke(Color.black, lineWidth: 1))
                     })
 //                    TextField(
 //                        "Input",
@@ -107,10 +89,14 @@ struct ContentView: View {
                     }, label: {
                         Text("\(result)")
                             .padding()
-                            .frame(width: UIScreen.main.bounds.width, height: lineHeight, alignment: .leading)
+                            .frame(width: lineWidth, height: lineHeight, alignment: .leading)
                             .font(.system(size: lineFontSize))
                             .foregroundColor(lineTextColour)
-                            .background(lineBackground)
+                            .background(lineBackgroundColor)
+                            .cornerRadius(lineCornerRadius)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: lineCornerRadius)
+                                    .stroke(Color.black, lineWidth: 1))
                     })
                 }
             
@@ -135,6 +121,7 @@ struct ContentView: View {
                     ForEach(7...9, id: \.self) { number in
                         Button(action: {
                             input(input: "\(number)")
+                            print((UIScreen.main.bounds.width - (buttonSize*4)) / 5)
                         }, label: {
                             Text("\(number)")
                                 .frame(width: buttonSize, height: buttonSize)
@@ -297,7 +284,7 @@ struct ContentView: View {
                         inputLine = ""
                         
                     }, label: {
-                        Text("\(linePos)")
+                        Text("C")
                             .frame(width: buttonSize, height: buttonSize)
                             .font(.system(size:buttonFontSize))
                             .foregroundColor(numTextColour)
@@ -328,7 +315,7 @@ struct ContentView: View {
 //        return calc
         if NSPredicate(format: "SELF MATCHES %@", "^[-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?([+\\-*/][-+]?\\d*\\.?\\d+([eE][-+]?\\d+)?)*$").evaluate(with: inputLine)
         {
-            let expn = NSExpression(format:inputLine)
+            let expn = NSExpression(format:inputLine) 
             let calc:String = "\(expn.expressionValue(with: nil, context: nil) ?? 0)"
             print(calc)
             addItem(intputLine: inputLine, res: calc)
@@ -336,7 +323,7 @@ struct ContentView: View {
         }
         else {
             print("u fucked up")
-            return "9"
+            return "Error"
         }
     }
 
@@ -352,22 +339,6 @@ struct ContentView: View {
         {
             inputLine += ("\(input)")
         }
-        else if linePos == 3 // if continued typing after enter pressed, push result to first line and continue on second line
-        {
-            lineOne = result
-            lineTwo = ""
-            lineTwo += ("\(input)")
-            linePos = 2
-        }
-    }
-    
-    func changeLine() // if operater is pressed, move to next line
-    {
-//        if linePos == 0
-//        {
-//            linePos = 2
-//        }
-        print("ZZZZZZZZZZZ")
     }
     
     func toggleMenu() {
